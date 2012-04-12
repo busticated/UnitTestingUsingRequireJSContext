@@ -1,0 +1,86 @@
+<!doctype html>
+<head>
+	<link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" media="screen">
+	<script type="text/javascript" src="http://code.jquery.com/qunit/qunit-git.js"></script>
+
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/1.0.7/require.min.js"></script>
+	<script>
+		var req1 = require.config({context: 'req1'});
+		req1(['js/mods/one'], function(one){
+			
+			test('blah', function(){
+				one.inc();
+				one.inc();
+				one.inc();
+
+				equal(one.get(), 3, 'whooopee!');
+			});
+		});
+
+		var req2 = require.config({context: 'req2'});
+		req2(['js/mods/one'], function(one){
+			
+			test('beefy', function(){
+				one.inc();
+				one.inc();
+
+				equal(one.get(), 2, 'awwwwwyeeeah!');
+			});
+		});
+
+		var req3 = require.config({context: 'req3'});
+		req3(['js/mods/three'], function(three){
+			
+			test('cheeeez', function(){
+				three.dep.inc();
+				three.dep.inc();
+
+				equal(three.dep.get(), 2, 'sweet!');
+			});
+		});
+
+		define('one', function(){
+			return {
+				foo: 'bar'
+			};
+		});
+
+		var req4 = require.config({context: 'req4'});
+		req4(['require'], function(reqI) {
+
+			define('one', function() {
+				return {
+					foo : 'bar'
+				};
+			});
+
+			reqI(['js/mods/three'], function(three){
+				test('fooooooz', function(){
+					console.log(three.dep.inc);
+					equal(three.dep.foo, 'bar', 'meh!');
+				});
+			});
+		});
+
+		var req5 = require.config({context: 'req5'});
+		req5(['js/mods/three'], function(three){
+
+			test('tthhhrrrrppppt', function(){
+				three.dep.inc();
+				three.dep.inc();
+
+				equal(three.dep.get(), 2, 'yaaaaaayyyyyy!');
+			});
+		});
+	</script>
+</head>
+<body>
+	<h1 id="qunit-header">RequuireJS Context: Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">
+	</div>
+</body>
+</html>
